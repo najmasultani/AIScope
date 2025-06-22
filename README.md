@@ -1,103 +1,115 @@
-# Agent Development Kit (ADK) Crash Course
+# 🤖 AISCOPE: Multi-Agent AI System using Google's ADK
 
-This repository contains examples for learning Google's Agent Development Kit (ADK), a powerful framework for building LLM-powered agents.
+AISCOPE is a modular multi-agent system built with [Google's Agent Development Kit (ADK)](https://google.github.io/adk-docs/). It demonstrates how intelligent agents can collaborate to handle diverse AI-related tasks such as repository tracking, code testing, news summarization, and content analysis — all managed by a central controller agent.
 
-## Getting Started
+---
 
-### Setup Environment
+## 📦 Features
 
-You only need to create one virtual environment for all examples in this course. Follow these steps to set it up:
+- 🧠 **Manager Agent**: Delegates tasks intelligently across the system
+- 📈 **Code Repository Tracker**: Monitors trending AI projects on GitHub
+- 🧪 **Code Tester**: Installs and tests Python libraries with example code
+- 📰 **AI News Fetcher**: Retrieves and summarizes current AI news
+- 📚 **Insight Summarizer**: Analyzes and compares technical content (papers, changelogs, READMEs)
 
-```bash
-# Create virtual environment in the root directory
-python -m venv .venv
+---
 
-# Activate (each new terminal)
-# macOS/Linux:
-source .venv/bin/activate
-# Windows CMD:
-.venv\Scripts\activate.bat
-# Windows PowerShell:
-.venv\Scripts\Activate.ps1
+## 🗂️ Project Structure
 
-# Install dependencies
-pip install -r requirements.txt
+```
+AISCOPE/
+├── agent.py                   # Root manager agent
+├── .env                       # API key configuration
+├── sub_agents/
+│   ├── code_repo_tracker/
+│   │   └── agent.py
+│   ├── code_tester/
+│   │   └── agent.py
+│   ├── ai_news_fetcher/
+│   │   └── agent.py
+│   └── insight_summarizer/
+│       └── agent.py
 ```
 
-Once set up, this single environment will work for all examples in the repository.
+Each sub-agent is self-contained and exposes a single `Agent` object. The manager imports and coordinates them via ADK’s `Agent` and `AgentTool` patterns.
 
-### Setting Up API Keys
+---
 
-1. Create an account in Google Cloud https://cloud.google.com/?hl=en
-2. Create a new project
-3. Go to https://aistudio.google.com/apikey
-4. Create an API key
-5. Assign key to the project
-6. Connect to a billing account
+## 🚀 Getting Started
 
-Each example folder contains a `.env.example` file. For each project you want to run:
+### 1. Clone the Repository
 
-1. Navigate to the example folder
-2. Rename `.env.example` to `.env` 
-3. Open the `.env` file and replace the placeholder with your API key:
-   ```
-   GOOGLE_API_KEY=your_api_key_here
-   ```
+```bash
+git clone https://github.com/YOUR_USERNAME/aiscope.git
+cd aiscope
+```
 
-You'll need to repeat this for each example project you want to run.
+### 2. Set Up Your Environment
 
-## Examples Overview
+```bash
+python -m venv .venv
+source .venv/bin/activate        # or .venv\Scripts\activate on Windows
+pip install -r requirements.txt  # if you have one
+```
 
-Here's what you can learn from each example folder:
+### 3. Configure API Key
 
-### 1. Basic Agent
-Introduction to the simplest form of ADK agents. Learn how to create a basic agent that can respond to user queries.
+Create a `.env` file in the project root and add:
 
-### 2. Tool Agent
-Learn how to enhance agents with tools that allow them to perform actions beyond just generating text.
+```env
+GOOGLE_API_KEY=your-api-key-here
+```
 
-### 3. LiteLLM Agent
-Example of using LiteLLM to abstract away LLM provider details and easily switch between different models.
+---
 
-### 4. Structured Outputs
-Learn how to use Pydantic models with `output_schema` to ensure consistent, structured responses from your agents.
+## 💡 How It Works
 
-### 5. Sessions and State
-Understand how to maintain state and memory across multiple interactions using sessions.
+The manager agent acts as a central router. Depending on the query:
 
-### 6. Persistent Storage
-Learn techniques for storing agent data persistently across sessions and application restarts.
+- It can **delegate** fully to sub-agents (e.g., code tester)
+- Or use **agent tools** to retrieve data, summarize, and respond with integrated results
 
-### 7. Multi-Agent
-See how to orchestrate multiple specialized agents working together to solve complex tasks.
+This hybrid design allows flexibility while complying with ADK’s tool-use restrictions.
 
-### 8. Stateful Multi-Agent
-Build agents that maintain and update state throughout complex multi-turn conversations.
+---
 
-### 9. Callbacks
-Implement event callbacks to monitor and respond to agent behaviors in real-time.
+## 🧪 Example Prompts
 
-### 10. Sequential Agent
-Create pipeline workflows where agents operate in a defined sequence to process information.
+Try these in the ADK web UI:
 
-### 11. Parallel Agent
-Leverage concurrent operations with parallel agents for improved efficiency and performance.
+- "What are the top trending AI repos this week?"
+- "Install `transformers` and run a sample inference."
+- "Summarize the differences between Llama 3 and GPT-4."
+- "What’s new in AI news today?"
 
-### 12. Loop Agent
-Build sophisticated agents that can iteratively refine their outputs through feedback loops.
+---
 
-## Official Documentation
+## ▶️ Run the App
 
-For more detailed information, check out the official ADK documentation:
-- https://google.github.io/adk-docs/get-started/quickstart
+```bash
+adk web
+```
 
-## Support
+Then open [http://localhost:8000](http://localhost:8000) and select the **manager** agent to begin chatting.
 
-Need help or run into issues? Join our free AI Developer Accelerator community on Skool:
-- [AI Developer Accelerator Community](https://www.skool.com/ai-developer-accelerator/about)
+---
 
-In the community you'll find:
-- Weekly coaching and support calls
-- Early access to code from YouTube projects
-- A network of AI developers of all skill levels ready to help
-- Behind-the-scenes looks at how these apps are built
+## 🛠️ Notes
+
+- Run all commands from the root folder (`AISCOPE/`)
+- Only one tool type (built-in **or** custom) is allowed per sub-agent
+- Built-in tools can still be used via `AgentTool` at the manager level
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+## 📚 Resources
+
+- [ADK Docs (Google)](https://google.github.io/adk-docs/)
+- [AgentTool Usage Guide](https://google.github.io/adk-docs/tools/function-tools/#3-agent-as-a-tool)
+- [agent-development-kit-crash-course](https://github.com/bhancockio/agent-development-kit-crash-course/tree/main)
