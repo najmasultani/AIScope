@@ -1,32 +1,38 @@
 from google.adk.agents import Agent
 from google.adk.tools.agent_tool import AgentTool
 
-from .sub_agents.funny_nerd.agent import funny_nerd
-from .sub_agents.news_analyst.agent import news_analyst
-from .sub_agents.stock_analyst.agent import stock_analyst
+# Sub-agents
+from .sub_agents.code_repo_tracker.agent import code_repo_tracker
+from .sub_agents.code_tester.agent import code_tester
+from .sub_agents.ai_news_fetcher.agent import ai_news_fetcher
+from .sub_agents.insight_summarizer.agent import insight_summarizer
 from .tools.tools import get_current_time
 
+# Root manager agent
 root_agent = Agent(
     name="manager",
     model="gemini-2.0-flash",
-    description="Manager agent",
+    description="Manager agent that delegates or coordinates AI-related tasks.",
     instruction="""
-    You are a manager agent that is responsible for overseeing the work of the other agents.
+    You are a manager agent responsible for routing user queries to the appropriate sub-agent or tool.
 
-    Always delegate the task to the appropriate agent. Use your best judgement 
-    to determine which agent to delegate to.
+    You should fully delegate queries to:
+    - code_repo_tracker: for trending repos, papers, models.
+    - code_tester: for testing AI library installations.
 
-    You are responsible for delegating tasks to the following agent:
-    - stock_analyst
-    - funny_nerd
-
-    You also have access to the following tools:
-    - news_analyst
-    - get_current_time
+    You can use the following tools to support your decisions:
+    - ai_news_fetcher (as a tool): for searching recent AI news.
+    - insight_summarizer (as a tool): for summarizing or comparing technical content.
+    - search_github_tool: search trending GitHub AI repos.
+    - run_code_test_tool: install and run example code to verify library.
     """,
-    sub_agents=[stock_analyst, funny_nerd],
+    sub_agents=[
+        code_repo_tracker,
+        code_tester
+    ],
     tools=[
-        AgentTool(news_analyst),
+        AgentTool(ai_news_fetcher),
+        AgentTool(insight_summarizer),
         get_current_time,
     ],
 )
